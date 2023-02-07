@@ -635,7 +635,9 @@ def colmap_to_json(
             "transform_matrix": c2w.tolist(),
         }
         if camera_mask_path is not None:
-            frame["mask_path"] = camera_mask_path.relative_to(camera_mask_path.parent.parent).as_posix()
+            current_camera_mask_path = camera_mask_path.relative_to(camera_mask_path.parent) / im_data.name
+            frame["mask_path"] = current_camera_mask_path.as_posix()
+            # frame["mask_path"] = camera_mask_path.relative_to(camera_mask_path.parent.parent).as_posix()
         frames.append(frame)
 
     out = {
