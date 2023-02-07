@@ -229,6 +229,19 @@ def copy_and_upscale_polycam_depth_maps_list(
     return copied_depth_map_paths
 
 
+def list_images(data: Path) -> List[Path]:
+    """Lists all supported images in a directory
+
+    Args:
+        data: Path to the directory of images.
+    Returns:
+        Paths to images contained in the directory
+    """
+    allowed_exts = [".jpg", ".jpeg", ".png", ".tif", ".tiff"]
+    image_paths = sorted([p for p in data.glob("[!.]*") if p.suffix.lower() in allowed_exts])
+    return image_paths
+
+
 def copy_images(data: Path, image_dir: Path, verbose) -> int:
     """Copy images from a directory to a new directory.
 
@@ -240,8 +253,7 @@ def copy_images(data: Path, image_dir: Path, verbose) -> int:
         The number of images copied.
     """
     with status(msg="[bold yellow]Copying images...", spinner="bouncingBall", verbose=verbose):
-        allowed_exts = [".jpg", ".jpeg", ".png", ".tif", ".tiff"]
-        image_paths = sorted([p for p in data.glob("[!.]*") if p.suffix.lower() in allowed_exts])
+        image_paths = list_images(data)
 
         if len(image_paths) == 0:
             CONSOLE.log("[bold red]:skull: No usable images in the data folder.")
